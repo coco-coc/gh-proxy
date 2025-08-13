@@ -10,17 +10,14 @@
 </head>
 <body>
   <div class="header">
-    <div class="logo-container">
-      <i class="fas fa-code-branch logo-icon"></i>
-      <h1>GitHub脚本代理转换器</h1>
-    </div>
+    <h1><i class="fas fa-code-branch me-2"></i>GitHub脚本代理转换器</h1>
     <p>解决纯IPv6的VPS运行GitHub脚本时访问GitHub不通的问题</p>
   </div>
 
   <div class="container">
     <div class="row">
       <div class="col-lg-6">
-        <div class="card info-card">
+        <div class="card">
           <div class="card-header">
             <i class="fas fa-info-circle me-2"></i>使用说明
           </div>
@@ -29,24 +26,20 @@
             
             <p class="fw-bold mt-4">支持的命令格式:</p>
             <div class="example-box">
-              <i class="fas fa-terminal me-2"></i>
               bash &lt;(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4
             </div>
             <div class="example-box">
-              <i class="fas fa-terminal me-2"></i>
               bash &lt;(wget -qO- -o- https://git.io/v2ray.sh)
             </div>
             <div class="example-box">
-              <i class="fas fa-terminal me-2"></i>
               wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
             </div>
             <div class="example-box">
-              <i class="fas fa-terminal me-2"></i>
               wget -N --no-check-certificate https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh
             </div>
             
             <div class="d-flex justify-content-end mt-4">
-              <a href="https://github.com/crazypeace/gh-proxy/" class="btn btn-outline-primary github-btn">
+              <a href="https://github.com/crazypeace/gh-proxy/" class="btn btn-sm btn-outline-primary">
                 <i class="fab fa-github me-1"></i> Fork me on GitHub
               </a>
             </div>
@@ -145,26 +138,14 @@
   </div>
   
   <div class="footer">
-    <div class="footer-content">
-      <p>© 2025 GitHub脚本代理转换器 | 帮助解决纯IPv6 VPS访问GitHub的问题</p>
-      <div class="social-icons">
-        <a href="#"><i class="fab fa-github"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-discord"></i></a>
-      </div>
-    </div>
+    <p>© 2023 GitHub脚本代理转换器 | 帮助解决纯IPv6 VPS访问GitHub的问题</p>
   </div>
   
   <div class="theme-switch" id="themeSwitch">
     <i class="fas fa-moon"></i>
   </div>
   
-  <div class="toast" id="copyToast">
-    <div class="toast-content">
-      <i class="fas fa-check-circle"></i>
-      <span class="toast-text">复制成功!</span>
-    </div>
-  </div>
+  <div class="toast" id="copyToast">复制成功!</div>
 
   <script src="main.js"></script>
 </body>
