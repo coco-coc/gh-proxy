@@ -1,3 +1,4 @@
+/* 添加暗夜模式下的文本颜色和对比度优化 */
 :root {
   --primary-color: #6f42c1;
   --secondary-color: #0d6efd;
@@ -5,6 +6,7 @@
   --card-bg: rgba(255, 255, 255, 0.95);
   --body-bg: #f8f9fa;
   --text-color: #212529;
+  --text-secondary: #6c757d;
   --border-radius: 12px;
   --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
@@ -16,14 +18,81 @@
   --success-color: #20c997;
   --card-bg: rgba(33, 37, 41, 0.95);
   --body-bg: #121212;
-  --text-color: #e9ecef;
+  --text-color: #f8f9fa; /* 更亮的文本颜色 */
+  --text-secondary: #adb5bd; /* 更亮的次要文本颜色 */
   --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* 确保所有文本元素都使用正确的颜色 */
+body, .card, .card-body, .example-box, 
+.form-control, .form-label, .input-group-text,
+.alert, .footer, .btn {
+  color: var(--text-color);
+  transition: var(--transition);
+}
+
+/* 暗夜模式下的输入框优化 */
+.dark-mode .form-control {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-color);
+}
+
+.dark-mode .form-control:focus {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--primary-color);
+}
+
+/* 暗夜模式下的卡片优化 */
+.dark-mode .card {
+  background: rgba(30, 33, 37, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 暗夜模式下的按钮优化 */
+.dark-mode .btn-primary {
+  background: linear-gradient(to right, #7d5cd1, #4a7eff);
+}
+
+.dark-mode .btn-primary:hover {
+  background: linear-gradient(to right, #6a4bb8, #3a6ae0);
+}
+
+/* 暗夜模式下的示例框优化 */
+.dark-mode .example-box {
+  background: rgba(111, 66, 193, 0.2);
+  border-left: 4px solid var(--primary-color);
+}
+
+/* 暗夜模式下的次要文本 */
+.dark-mode .text-muted {
+  color: var(--text-secondary) !important;
+}
+
+/* 暗夜模式下的警告框优化 */
+.dark-mode .alert-info {
+  background-color: rgba(13, 202, 240, 0.15);
+  border-color: rgba(13, 202, 240, 0.3);
+  color: var(--text-color);
+}
+
+/* 暗夜模式下的输入组文本 */
+.dark-mode .input-group-text {
+  background: rgba(111, 66, 193, 0.2);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--primary-color);
+}
+
+/* 确保占位符文本可见 */
+.dark-mode ::placeholder {
+  color: #aaa !important;
+  opacity: 1;
+}
+
+/* 以下是原有的样式保持不变 */
 body {
   background: linear-gradient(135deg, var(--body-bg) 0%, #e2e8f0 100%);
   background-attachment: fixed;
-  color: var(--text-color);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   min-height: 100vh;
@@ -102,43 +171,45 @@ body {
   font-size: 0.9rem;
 }
 
-.dark-mode .example-box {
-  background: rgba(111, 66, 193, 0.15);
-}
-
 .btn-primary {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   border: none;
   padding: 10px 20px;
   font-weight: 600;
   transition: var(--transition);
+  color: white;
 }
 
 .btn-primary:hover {
   background: linear-gradient(to right, #5a32a3, #0a58ca);
   transform: translateY(-2px);
+  color: white;
 }
 
 .btn-info {
   background: var(--secondary-color);
   border: none;
   transition: var(--transition);
+  color: white;
 }
 
 .btn-info:hover {
   background: #0a58ca;
   transform: translateY(-2px);
+  color: white;
 }
 
 .btn-success {
   background: var(--success-color);
   border: none;
   transition: var(--transition);
+  color: white;
 }
 
 .btn-success:hover {
   background: #157347;
   transform: translateY(-2px);
+  color: white;
 }
 
 .input-group-text {
@@ -151,6 +222,7 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 12px;
   transition: var(--transition);
+  color: var(--text-color);
 }
 
 .form-control:focus {
@@ -158,20 +230,9 @@ body {
   box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
 }
 
-.dark-mode .form-control {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
-}
-
-.dark-mode .form-control:focus {
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .footer {
   text-align: center;
   padding: 20px;
-  color: var(--text-color);
   opacity: 0.7;
   font-size: 0.9rem;
 }
