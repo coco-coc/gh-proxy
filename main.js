@@ -1,137 +1,86 @@
-// 主题切换功能
-document.getElementById('themeSwitch').addEventListener('click', function() {
-  document.body.classList.toggle('dark-mode');
-  
-  const icon = this.querySelector('i');
-  if (document.body.classList.contains('dark-mode')) {
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-  } else {
-    icon.classList.remove('fa-sun');
-    icon.classList.add('fa-moon');
-  }
-});
-
-// 显示提示信息
-function showToast(message) {
-  const toast = document.getElementById('copyToast');
-  toast.textContent = message;
-  toast.classList.add('show');
-  
-  setTimeout(() => {
-    toast.classList.remove('show');
-  }, 2000);
-}
-
-// 复制功能
-document.getElementById('copyResult1Btn').addEventListener('click', function() {
-  const element = document.getElementById("result1");
-  element.select();
-  document.execCommand('copy');
-  showToast('多层代理命令已复制');
-});
-
-document.getElementById('copyResult2Btn').addEventListener('click', function() {
-  const element = document.getElementById("result2");
-  element.select();
-  document.execCommand('copy');
-  showToast('单层代理命令已复制');
-});
-
-// 转换脚本
-document.getElementById('convertScriptBtn').addEventListener('click', function() {
-  let inputStr = document.getElementById("githubScript").value;
-  if (!inputStr) {
-    showToast("请输入脚本命令");
+function convertScript() {
+  inputStr = document.querySelector("#githubScript").value;
+  if (inputStr == "") {
     return;
   }
 
-  const ghproxy = document.getElementById("ghproxy").value;
-  const perlcmdbegin = ' | perl -pe "$(curl -L ';
-  const perlcmdend = ')"';
-  const perlrule = ghproxy + 'perl-pe-para';
+  ghproxy = document.querySelector("#ghproxy").value;
+  perlcmdbegin = ' | perl -pe "$(curl -L ';
+  perlcmdend = ')"';
+  perlrule = ghproxy + 'perl-pe-para';
 
-  // 给裸的git类链接前面加上 https://
+  // 先给裸的git类链接前面加上 https://
   inputStr = inputStr.replace(/ git/g, ' https://git');
 
+  // 再进行加github proxy的转换
   // 处理 bash <( curl xxx.sh) 或 bash <( wget -O- xxx.sh)
-  const regex1 = /(bash.*?)(https?:\/\/.*?)(\).*)/s;
-  
-  // 多层代理（处理嵌套脚本）
-  const replacement1 = '$1' + ghproxy + '$2' + perlcmdbegin + perlrule + perlcmdend + '$3';
-  const resultStr1 = inputStr.replace(regex1, replacement1);
+  regex1 = /(bash.*?)(https?:\/\/.*?)(\).*)/s;
+
+  // 考虑github脚本嵌套调用的情况, 即A脚本调用B脚本, B脚本调用C脚本
+  replacement1 = '$1' + ghproxy + '$2' + perlcmdbegin + perlrule + perlcmdend + '$3';
+  resultStr1 = inputStr.replace(regex1, replacement1);
   if (resultStr1 !== inputStr) {
-    document.getElementById("result1").value = resultStr1;
+    document.querySelector("#result1").value = resultStr1;
   }
 
-  // 单层代理
-  const replacement2 = '$1' + ghproxy + '$2' + ' | perl -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g"' + '$3';
-  let resultStr2 = inputStr.replace(regex1, replacement2);
+  // 只考虑处理一层Github脚本的情况
+  replacement2 = '$1' + ghproxy + '$2' + ' | perl -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g"' + '$3';
+  resultStr2 = inputStr.replace(regex1, replacement2);
   if (resultStr2 !== inputStr) {
-    document.getElementById("result2").value = resultStr2;
+    document.querySelector("#result2").value = resultStr2;
   }
 
   // 处理 wget xxx.sh && bash xxx.sh 或 wget xxx.sh && chmod +x xxx.sh && ./xxx.sh
-  const regex2 = /(wget.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
-  const replacement3 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
+  regex2 = /(wget.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
+  //replacement3 = '1 : $1 ; 2 : $2 ; 3 : $3 ; 4 : $4 ;'
+  replacement3 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
   resultStr2 = inputStr.replace(regex2, replacement3);
   if (resultStr2 !== inputStr) {
-    document.getElementById("result2").value = resultStr2;
+    document.querySelector("#result2").value = resultStr2;
   }
 
-  // 处理 curl -sS -O xxx.sh && bash xxx.sh
-  const regex3 = /^(curl.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
-  const replacement4 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
-  resultStr2 = inputStr.replace(regex3, replacement4);
+  // 处理 curl -sS -O xxx.sh && bash xxx.sh 或 curl -sS -O xxx.sh && chmod +x xxx.sh && bash xxx.sh 
+  regex2 = /^(curl.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
+  //replacement3 = '1 : $1 ; 2 : $2 ; 3 : $3 ; 4 : $4 ;'
+  replacement3 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
+  resultStr2 = inputStr.replace(regex2, replacement3);
   if (resultStr2 !== inputStr) {
-    document.getElementById("result2").value = resultStr2;
+    document.querySelector("#result2").value = resultStr2;
   }
+}
 
-  // 如果没有转换结果，显示提示
-  if (resultStr1 === inputStr && resultStr2 === inputStr) {
-    showToast("未识别到GitHub脚本命令");
-  } else {
-    showToast("转换成功!");
-  }
-});
+function copyResult1() {
+  resultStr = document.querySelector("#result1").value;
+  navigator.clipboard.writeText(resultStr);
+}
 
-// 使用当前页面作为代理
-document.getElementById('useLocalBtn').addEventListener('click', function() {
-  document.getElementById("ghproxy").value = window.location.origin + window.location.pathname;
-  showToast("已设置为当前页面地址");
-});
+function copyResult2() {
+  resultStr = document.querySelector("#result2").value;
+  navigator.clipboard.writeText(resultStr);
+}
 
-// 转换资源URL
-document.getElementById('convertResBtn').addEventListener('click', function() {
-  let inputStr = document.getElementById("githubRes").value;
-  if (!inputStr) {
-    showToast("请输入资源链接");
+function getLocalUrl() {
+  document.querySelector("#ghproxy").value = window.location.href;
+}
+
+function convertRes() {
+  inputStr = document.querySelector("#githubRes").value;
+  if (inputStr == "") {
     return;
   }
 
-  const ghproxy = document.getElementById("ghproxy").value;
-  
-  // 给裸的git类链接前面加上 https://
+  ghproxy = document.querySelector("#ghproxy").value;
+
+  // 先给裸的git类链接前面加上 https://
   inputStr = inputStr.replace(/ git/g, ' https://git');
-  
-  const resultStr = ghproxy + inputStr;
-  document.getElementById("resAfterGhproxy").value = resultStr;
-  showToast("资源链接已转换");
-});
 
-// 打开转换后的资源链接
-document.getElementById('fetchResBtn').addEventListener('click', function() {
-  const url = document.getElementById("resAfterGhproxy").value;
-  if (url) {
-    window.open(url, '_blank');
-  } else {
-    showToast("请先转换资源链接");
-  }
-});
+  resultStr = ghproxy + inputStr;
 
-// 初始化页面
-document.addEventListener('DOMContentLoaded', function() {
-  // 设置示例命令
-  document.getElementById("githubScript").value = "bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4";
-  document.getElementById("githubRes").value = "https://github.com/crazypeace/warp.sh/raw/main/warp.sh";
-});
+  document.querySelector("#resAfterGhproxy").value = resultStr;
+}
+
+function fetchRes() {
+  window.open(document.querySelector("#resAfterGhproxy").value);
+}
+
+getLocalUrl()
