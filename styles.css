@@ -1,4 +1,3 @@
-/* 颜色变量（浅色模式默认） */
 :root {
   --primary-color: #6f42c1;
   --secondary-color: #0d6efd;
@@ -12,12 +11,12 @@
   --transition: all 0.3s ease;
 }
 
-/* 浅色模式下的占位符半透明效果 */
+/* 浅色模式占位符 */
 ::placeholder {
   color: rgba(0, 0, 0, 0.5);
 }
 
-/* 暗色模式自动切换 */
+/* 暗色模式变量（自动跟随系统） */
 @media (prefers-color-scheme: dark) {
   :root {
     --primary-color: #9d7fe8;
@@ -29,71 +28,13 @@
     --text-secondary: #adb5bd;
     --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   }
-
-  /* 暗色模式占位符半透明效果 */
   ::placeholder {
     color: rgba(255, 255, 255, 0.5);
     opacity: 1;
   }
-
-  /* 暗色模式下的输入框优化 */
-  .form-control {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: var(--text-color);
-  }
-
-  .form-control:focus {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: var(--primary-color);
-  }
-
-  /* 暗色模式下的卡片优化 */
-  .card {
-    background: rgba(30, 33, 37, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  /* 暗色模式下的按钮优化 */
-  .btn-primary {
-    background: linear-gradient(to right, #7d5cd1, #4a7eff);
-  }
-
-  .btn-primary:hover {
-    background: linear-gradient(to right, #6a4bb8, #3a6ae0);
-  }
-
-  /* 暗色模式下的示例框优化 */
-  .example-box {
-    background: rgba(111, 66, 193, 0.2);
-    border-left: 4px solid var(--primary-color);
-  }
-
-  /* 暗色模式下的次要文本 */
-  .text-muted {
-    color: var(--text-secondary) !important;
-  }
-
-  /* 暗色模式下的警告框优化 */
-  .alert-info {
-    background-color: rgba(13, 202, 240, 0.15);
-    border-color: rgba(13, 202, 240, 0.3);
-    color: var(--text-color);
-  }
-
-  /* 暗色模式下的输入组文本 */
-  .input-group-text {
-    background: rgba(111, 66, 193, 0.2);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: var(--primary-color);
-  }
-
-  body {
-    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-  }
 }
 
-/* 公共样式（浅色 + 暗色共用） */
+/* 全局文本颜色 */
 body, .card, .card-body, .example-box, 
 .form-control, .form-label, .input-group-text,
 .alert, .footer, .btn {
@@ -101,50 +42,35 @@ body, .card, .card-body, .example-box,
   transition: var(--transition);
 }
 
+/* 页面背景 */
 body {
   background: linear-gradient(135deg, var(--body-bg) 0%, #e2e8f0 100%);
   background-attachment: fixed;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
   min-height: 100vh;
-  transition: var(--transition);
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  }
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding-top: 20px;
-}
-
-.header h1 {
-  font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: 10px;
-  font-size: 2.5rem;
-}
-
-.header p {
-  color: var(--text-color);
-  opacity: 0.8;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
+/* 卡片 */
 .card {
   background: var(--card-bg);
-  border: none;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   margin-bottom: 25px;
   transition: var(--transition);
   overflow: hidden;
 }
-
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
+/* 卡片头部 */
 .card-header {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   color: white;
@@ -153,7 +79,6 @@ body {
   border-bottom: none;
   position: relative;
 }
-
 .card-header::after {
   content: "";
   position: absolute;
@@ -164,20 +89,28 @@ body {
   background: linear-gradient(to right, var(--success-color), rgba(255, 255, 255, 0.3));
 }
 
-.card-body {
-  padding: 25px;
+/* 输入框 */
+.form-control {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  transition: var(--transition);
+  color: var(--text-color);
+}
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+}
+@media (prefers-color-scheme: dark) {
+  .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.12);
+  }
 }
 
-.example-box {
-  background: rgba(111, 66, 193, 0.05);
-  border-left: 4px solid var(--primary-color);
-  padding: 15px;
-  border-radius: 0 8px 8px 0;
-  margin-bottom: 15px;
-  font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
-}
-
+/* 按钮 */
 .btn-primary {
   background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
   border: none;
@@ -186,120 +119,22 @@ body {
   transition: var(--transition);
   color: white;
 }
-
 .btn-primary:hover {
   background: linear-gradient(to right, #5a32a3, #0a58ca);
   transform: translateY(-2px);
-  color: white;
 }
 
-.btn-info {
-  background: var(--secondary-color);
-  border: none;
-  transition: var(--transition);
-  color: white;
-}
-
-.btn-info:hover {
-  background: #0a58ca;
-  transform: translateY(-2px);
-  color: white;
-}
-
-.btn-success {
-  background: var(--success-color);
-  border: none;
-  transition: var(--transition);
-  color: white;
-}
-
-.btn-success:hover {
-  background: #157347;
-  transform: translateY(-2px);
-  color: white;
-}
-
-.input-group-text {
-  background: rgba(111, 66, 193, 0.1);
-  border: none;
-  color: var(--primary-color);
-}
-
-.form-control {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 12px;
-  transition: var(--transition);
-  color: var(--text-color);
-}
-
-.form-control:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
-}
-
+/* 页脚 */
 .footer {
   text-align: center;
   padding: 20px;
   opacity: 0.7;
   font-size: 0.9rem;
 }
-
 .footer a {
   color: var(--primary-color);
   text-decoration: none;
 }
-
 .footer a:hover {
   text-decoration: underline;
-}
-
-.theme-switch {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--primary-color);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  z-index: 100;
-  transition: var(--transition);
-}
-
-.theme-switch:hover {
-  transform: scale(1.1);
-}
-
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--success-color);
-  color: white;
-  padding: 12px 25px;
-  border-radius: 50px;
-  box-shadow: var(--shadow);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
-}
-
-.toast.show {
-  opacity: 1;
-}
-
-@media (max-width: 768px) {
-  .header h1 {
-    font-size: 2rem;
-  }
-  
-  .card-body {
-    padding: 20px;
-  }
 }
