@@ -53,9 +53,7 @@
           <div class="card-body">
             <div class="mb-3">
               <label class="form-label">输入GitHub资源链接</label>
-              <input type="text" class="form-control" id="githubRes" 
-                     placeholder="例如：https://github.com/crazypeace/warp.sh/raw/main/warp.sh"
-                     value="https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
+              <input type="text" class="form-control" id="githubRes" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
             </div>
             
             <button class="btn btn-primary w-100 mb-4" onclick="convertRes()">
@@ -64,8 +62,7 @@
             
             <label class="form-label">转换后的链接</label>
             <div class="input-group mb-3">
-              <input type="text" class="form-control" id="resAfterGhproxy" readonly
-                     value="https://git.1314k.tk/https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
+              <input type="text" class="form-control" id="resAfterGhproxy" readonly>
               <button class="btn btn-success" type="button" onclick="fetchRes()">
                 <i class="fas fa-external-link-alt"></i>
               </button>
@@ -82,9 +79,7 @@
           <div class="card-body">
             <div class="mb-3">
               <label class="form-label">输入GitHub脚本命令</label>
-              <input type="text" class="form-control" id="githubScript" 
-                     placeholder="例如：bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4"
-                     value="bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4">
+              <input type="text" class="form-control" id="githubScript" placeholder="例如 bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4">
             </div>
             
             <button class="btn btn-primary w-100 mb-4" onclick="convertScript()">
@@ -95,8 +90,7 @@
               <label class="form-label">转换结果（单层代理）</label>
               <p class="small text-muted">仅处理脚本中的第一层GitHub资源</p>
               <div class="input-group">
-                <input type="text" class="form-control" id="result2" readonly
-                       value="bash <(curl -L https://git.1314k.tk/https://github.com/coco-coc/warp.sh/raw/main/warp.sh | perl -pe &quot;s#(http.*?git[^/]*?/)#https://git.1314k.tk/\\1#g&quot;) 4">
+                <input type="text" class="form-control" id="result2" readonly>
                 <button class="btn btn-success" type="button" onclick="copyResult('result2', '单层代理命令已复制')">
                   <i class="fas fa-copy"></i>
                 </button>
@@ -107,8 +101,7 @@
               <label class="form-label">转换结果（多层代理）</label>
               <p class="small text-muted">处理脚本中嵌套调用的其它GitHub脚本</p>
               <div class="input-group">
-                <input type="text" class="form-control" id="result1" readonly
-                       value="bash <(curl -L https://git.1314k.tk/https://github.com/coco-coc/warp.sh/raw/main/warp.sh | perl -pe &quot;$(curl -L https://git.1314k.tk/perl-pe-para)&quot;) 4">
+                <input type="text" class="form-control" id="result1" readonly>
                 <button class="btn btn-success" type="button" onclick="copyResult('result1', '多层代理命令已复制')">
                   <i class="fas fa-copy"></i>
                 </button>
