@@ -28,18 +28,19 @@
   }
 
   /* 输入框 */
-  .form-control::placeholder {
-    color: #adb5bd;
-    opacity: 0.8;
-  }
   .form-control {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.15);
-    color: #f8f9fa;
+    color: #f8f9fa !important;  /* 用户输入文本为白色 */
   }
   .form-control:focus {
     background: rgba(255, 255, 255, 0.12);
     border-color: var(--primary-color);
+    color: #f8f9fa !important;
+  }
+  .form-control::placeholder {
+    color: #adb5bd;
+    opacity: 0.8;
   }
 
   /* 卡片 */
@@ -83,7 +84,7 @@
     color: var(--primary-color);
   }
 
-  /* 背景 */
+  /* 页面背景 */
   body {
     background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   }
@@ -110,7 +111,7 @@ body, .card, .card-body, .example-box,
   opacity: 0.8;
 }
 
-/* 输入框 */
+/* 输入框默认颜色 */
 .form-control {
   color: var(--text-color);
 }
@@ -239,7 +240,6 @@ body {
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 12px;
   transition: var(--transition);
-  color: var(--text-color);
 }
 .form-control:focus {
   border-color: var(--primary-color);
