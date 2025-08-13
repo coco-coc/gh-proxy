@@ -1,4 +1,4 @@
-/* 添加暗夜模式下的文本颜色和对比度优化 */
+/* 颜色变量（浅色模式默认） */
 :root {
   --primary-color: #6f42c1;
   --secondary-color: #0d6efd;
@@ -12,18 +12,88 @@
   --transition: all 0.3s ease;
 }
 
-.dark-mode {
-  --primary-color: #9d7fe8;
-  --secondary-color: #5d9cff;
-  --success-color: #20c997;
-  --card-bg: rgba(33, 37, 41, 0.95);
-  --body-bg: #121212;
-  --text-color: #f8f9fa; /* 更亮的文本颜色 */
-  --text-secondary: #adb5bd; /* 更亮的次要文本颜色 */
-  --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+/* 浅色模式下的占位符半透明效果 */
+::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 
-/* 确保所有文本元素都使用正确的颜色 */
+/* 暗色模式自动切换 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #9d7fe8;
+    --secondary-color: #5d9cff;
+    --success-color: #20c997;
+    --card-bg: rgba(33, 37, 41, 0.95);
+    --body-bg: #121212;
+    --text-color: #f8f9fa;
+    --text-secondary: #adb5bd;
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  /* 暗色模式占位符半透明效果 */
+  ::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 1;
+  }
+
+  /* 暗色模式下的输入框优化 */
+  .form-control {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-color);
+  }
+
+  .form-control:focus {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--primary-color);
+  }
+
+  /* 暗色模式下的卡片优化 */
+  .card {
+    background: rgba(30, 33, 37, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* 暗色模式下的按钮优化 */
+  .btn-primary {
+    background: linear-gradient(to right, #7d5cd1, #4a7eff);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(to right, #6a4bb8, #3a6ae0);
+  }
+
+  /* 暗色模式下的示例框优化 */
+  .example-box {
+    background: rgba(111, 66, 193, 0.2);
+    border-left: 4px solid var(--primary-color);
+  }
+
+  /* 暗色模式下的次要文本 */
+  .text-muted {
+    color: var(--text-secondary) !important;
+  }
+
+  /* 暗色模式下的警告框优化 */
+  .alert-info {
+    background-color: rgba(13, 202, 240, 0.15);
+    border-color: rgba(13, 202, 240, 0.3);
+    color: var(--text-color);
+  }
+
+  /* 暗色模式下的输入组文本 */
+  .input-group-text {
+    background: rgba(111, 66, 193, 0.2);
+    border-color: rgba(255, 255, 255, 0.15);
+    color: var(--primary-color);
+  }
+
+  body {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  }
+}
+
+/* 公共样式（浅色 + 暗色共用） */
 body, .card, .card-body, .example-box, 
 .form-control, .form-label, .input-group-text,
 .alert, .footer, .btn {
@@ -31,65 +101,6 @@ body, .card, .card-body, .example-box,
   transition: var(--transition);
 }
 
-/* 暗夜模式下的输入框优化 */
-.dark-mode .form-control {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: var(--text-color);
-}
-
-.dark-mode .form-control:focus {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: var(--primary-color);
-}
-
-/* 暗夜模式下的卡片优化 */
-.dark-mode .card {
-  background: rgba(30, 33, 37, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 暗夜模式下的按钮优化 */
-.dark-mode .btn-primary {
-  background: linear-gradient(to right, #7d5cd1, #4a7eff);
-}
-
-.dark-mode .btn-primary:hover {
-  background: linear-gradient(to right, #6a4bb8, #3a6ae0);
-}
-
-/* 暗夜模式下的示例框优化 */
-.dark-mode .example-box {
-  background: rgba(111, 66, 193, 0.2);
-  border-left: 4px solid var(--primary-color);
-}
-
-/* 暗夜模式下的次要文本 */
-.dark-mode .text-muted {
-  color: var(--text-secondary) !important;
-}
-
-/* 暗夜模式下的警告框优化 */
-.dark-mode .alert-info {
-  background-color: rgba(13, 202, 240, 0.15);
-  border-color: rgba(13, 202, 240, 0.3);
-  color: var(--text-color);
-}
-
-/* 暗夜模式下的输入组文本 */
-.dark-mode .input-group-text {
-  background: rgba(111, 66, 193, 0.2);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: var(--primary-color);
-}
-
-/* 确保占位符文本可见 */
-.dark-mode ::placeholder {
-  color: #aaa !important;
-  opacity: 1;
-}
-
-/* 以下是原有的样式保持不变 */
 body {
   background: linear-gradient(135deg, var(--body-bg) 0%, #e2e8f0 100%);
   background-attachment: fixed;
@@ -97,10 +108,6 @@ body {
   padding: 20px;
   min-height: 100vh;
   transition: var(--transition);
-}
-
-.dark-mode body {
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
 }
 
 .header {
