@@ -6,16 +6,21 @@ document.getElementById('themeSwitch').addEventListener('click', function() {
   if (document.body.classList.contains('dark-mode')) {
     icon.classList.remove('fa-moon');
     icon.classList.add('fa-sun');
+    // 保存主题偏好
+    localStorage.setItem('theme', 'dark');
   } else {
     icon.classList.remove('fa-sun');
     icon.classList.add('fa-moon');
+    // 保存主题偏好
+    localStorage.setItem('theme', 'light');
   }
 });
 
 // 显示提示信息
 function showToast(message) {
   const toast = document.getElementById('copyToast');
-  toast.textContent = message;
+  const toastText = toast.querySelector('.toast-text');
+  toastText.textContent = message;
   toast.classList.add('show');
   
   setTimeout(() => {
@@ -26,16 +31,24 @@ function showToast(message) {
 // 复制功能
 document.getElementById('copyResult1Btn').addEventListener('click', function() {
   const element = document.getElementById("result1");
-  element.select();
-  document.execCommand('copy');
-  showToast('多层代理命令已复制');
+  if (element.value) {
+    element.select();
+    document.execCommand('copy');
+    showToast('多层代理命令已复制');
+  } else {
+    showToast('请先转换脚本');
+  }
 });
 
 document.getElementById('copyResult2Btn').addEventListener('click', function() {
   const element = document.getElementById("result2");
-  element.select();
-  document.execCommand('copy');
-  showToast('单层代理命令已复制');
+  if (element.value) {
+    element.select();
+    document.execCommand('copy');
+    showToast('单层代理命令已复制');
+  } else {
+    showToast('请先转换脚本');
+  }
 });
 
 // 转换脚本
@@ -131,6 +144,14 @@ document.getElementById('fetchResBtn').addEventListener('click', function() {
 
 // 初始化页面
 document.addEventListener('DOMContentLoaded', function() {
+  // 检查保存的主题偏好
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.querySelector('#themeSwitch i').classList.remove('fa-moon');
+    document.querySelector('#themeSwitch i').classList.add('fa-sun');
+  }
+  
   // 设置示例命令
   document.getElementById("githubScript").value = "bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4";
   document.getElementById("githubRes").value = "https://github.com/crazypeace/warp.sh/raw/main/warp.sh";
