@@ -1,86 +1,152 @@
 <!DOCTYPE html>
-<html>
- <head> 
-  <meta http-equiv="content-type" content="txt/html; charset=utf-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" /> 
-  
-  <title>转化github脚本为github代理的方式</title> 
-  <link rel="stylesheet" href="./styles.css" /> 
- </head> 
- <body> 
-  <div class="d-flex align-items-start flex-wrap">
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">解决纯IPv6的VPS运行GitHub脚本时访问GitHub不通的问题</h5> 
-   <div class="card-body"> 
-    <p>本Github Proxy项目可处理形如下列的Github一键脚本命令:</p> 
-    <p class="font-monospace">bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4 </p> 
-    <p class="font-monospace">bash <(wget -qO- -o- https://git.io/v2ray.sh) </p> 
-    <p class="font-monospace">wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh </p> 
-    <p class="font-monospace">wget -N --no-check-certificate https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh </p> 
-   </div> 
-   <div class="card-footer"> 
-    <span> <a href="https://github.com/crazypeace/gh-proxy/" target="_self">Fork me on GitHub</a> </span> 
-   </div> 
-  </div> 
-
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">转换Github一键脚本命令</h5> 
-   <div class="card-body"> 
-    <label>输入你原本的GitHub脚本命令:</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubScript" placeholder="例如 bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4" /> 
-    </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertScript()">转换脚本</button> 
-    </div> 
-    <p>以下为转换后的一键脚本命令, 请在命令行中执行</p> 
-    <label>只处理一层脚本中GitHub资源</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button> 
-    </div> 
-    <label>处理GitHub脚本里面嵌套调用了其它GitHub脚本</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result1" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button> 
-    </div> 
-   </div> 
-  </div> 
-
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">简单转换Github网址</h5> 
-   <div class="card-body"> 
-    <label>输入GitHub资源链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubRes" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh" /> 
-    </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertRes()">转换资源</button> 
-    </div> 
-    <label>以下为转换后的链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="resAfterGhproxy" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button> 
-    </div> 
-   </div> 
-  </div> 
-
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">其它说明</h5> 
-   <div class="card-body"> 
-    <label>高级参数 (不懂就不要动)</label> 
-    <div class="input-group mb-3"> 
-     <span class="input-group-text">Github Proxy</span> 
-     <input type="text" class="form-control" id="ghproxy" value="https://git.1314k.tk" /> 
-     <button class="btn btn-info" type="button" onclick="getLocalUrl()">使用本页</button> 
-    </div> 
-   </div> 
-  </div> 
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub脚本代理转换器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="header">
+    <h1><i class="fas fa-code-branch me-2"></i>GitHub脚本代理转换器</h1>
+    <p>解决纯IPv6的VPS运行GitHub脚本时访问GitHub不通的问题</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script> 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script> 
-  <script src="./main.js"></script>  
- </body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-info-circle me-2"></i>使用说明
+          </div>
+          <div class="card-body">
+            <p>本工具可将GitHub脚本命令转换为使用代理的命令，解决在纯IPv6 VPS上无法访问GitHub的问题。</p>
+            
+            <p class="fw-bold mt-4">支持的命令格式:</p>
+            <div class="example-box">
+              bash &lt;(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4
+            </div>
+            <div class="example-box">
+              bash &lt;(wget -qO- -o- https://git.io/v2ray.sh)
+            </div>
+            <div class="example-box">
+              wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
+            </div>
+            <div class="example-box">
+              wget -N --no-check-certificate https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <a href="https://github.com/crazypeace/gh-proxy/" class="btn btn-sm btn-outline-primary">
+                <i class="fab fa-github me-1"></i> Fork me on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-exchange-alt me-2"></i>简单转换GitHub网址
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">输入GitHub资源链接</label>
+              <input type="text" class="form-control" id="githubRes" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
+            </div>
+            
+            <button class="btn btn-primary w-100 mb-4" id="convertResBtn">
+              <i class="fas fa-sync-alt me-2"></i>转换资源
+            </button>
+            
+            <label class="form-label">转换后的链接</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="resAfterGhproxy" readonly>
+              <button class="btn btn-success" type="button" id="fetchResBtn">
+                <i class="fas fa-external-link-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-terminal me-2"></i>转换GitHub一键脚本命令
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">输入GitHub脚本命令</label>
+              <input type="text" class="form-control" id="githubScript" placeholder="例如 bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4">
+            </div>
+            
+            <button class="btn btn-primary w-100 mb-4" id="convertScriptBtn">
+              <i class="fas fa-magic me-2"></i>转换脚本
+            </button>
+            
+            <div class="mb-4">
+              <label class="form-label">转换结果（单层代理）</label>
+              <p class="small text-muted">仅处理脚本中的第一层GitHub资源</p>
+              <div class="input-group">
+                <input type="text" class="form-control" id="result2" readonly>
+                <button class="btn btn-success" type="button" id="copyResult2Btn">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div>
+              <label class="form-label">转换结果（多层代理）</label>
+              <p class="small text-muted">处理脚本中嵌套调用的其它GitHub脚本</p>
+              <div class="input-group">
+                <input type="text" class="form-control" id="result1" readonly>
+                <button class="btn btn-success" type="button" id="copyResult1Btn">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-cog me-2"></i>高级设置
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">仅当您了解这些参数的作用时才进行修改</p>
+            
+            <div class="mb-3">
+              <label class="form-label">GitHub代理地址</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-link"></i></span>
+                <input type="text" class="form-control" id="ghproxy" value="https://git.1314k.tk">
+                <button class="btn btn-info" type="button" id="useLocalBtn">
+                  <i class="fas fa-sync me-1"></i>使用本页
+                </button>
+              </div>
+            </div>
+            
+            <div class="alert alert-info">
+              <i class="fas fa-lightbulb me-2"></i> 提示：默认代理已足够处理大多数情况，无需修改
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>© 2023 GitHub脚本代理转换器 | 帮助解决纯IPv6 VPS访问GitHub的问题</p>
+  </div>
+  
+  <div class="theme-switch" id="themeSwitch">
+    <i class="fas fa-moon"></i>
+  </div>
+  
+  <div class="toast" id="copyToast">复制成功!</div>
+
+  <script src="main.js"></script>
+</body>
 </html>
