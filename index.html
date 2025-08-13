@@ -1,98 +1,524 @@
 <!DOCTYPE html>
-<html>
- <head> 
-  <meta http-equiv="content-type" content="txt/html; charset=utf-8" /> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" /> 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" /> 
-  
-  <title>转化github脚本为github代理的方式</title> 
-  <link rel="stylesheet" href="./styles.css" /> 
- </head> 
- <body> 
-  <div class="d-flex align-items-start flex-wrap">
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">解决纯IPv6的VPS运行GitHub脚本时访问GitHub不通的问题</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <p>本Github Proxy项目可处理形如下列的Github一键脚本命令:</p> 
-    <p class="font-monospace">bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4 </p> 
-    <p class="font-monospace">bash <(wget -qO- -o- https://git.io/v2ray.sh) </p> 
-    <p class="font-monospace">wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh </p> 
-    <p class="font-monospace">wget -N --no-check-certificate https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh </p> 
-   </div> 
-   <div class="card-footer"> 
-    <span> <a href="https://github.com/crazypeace/gh-proxy/" target="_self">Fork me on GitHub</a> </span> 
-   </div> 
-  </div> 
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub脚本代理转换器</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #6f42c1;
+      --secondary-color: #0d6efd;
+      --success-color: #198754;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --body-bg: #f8f9fa;
+      --text-color: #212529;
+      --border-radius: 12px;
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">转换Github一键脚本命令</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <label>输入你原本的GitHub脚本命令:</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubScript" aria-describedby="basic-addon1" placeholder="例如 bash <(curl -L https://github.com/crazypeace/warp.sh/raw/main/warp.sh) 4" /> 
-    </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertScript()" id="cvtBtn">转换脚本</button> 
-    </div> 
-    <p>以下为转换后的一键脚本命令, 请在命令行中执行</p> 
-    <label>只处理一层脚本中GitHub资源</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result2" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult2()">复制</button> 
-    </div> 
-    <label>处理GitHub脚本里面嵌套调用了其它GitHub脚本</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="result1" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="copyResult1()">复制</button> 
-    </div> 
-   </div> 
-  </div> 
+    .dark-mode {
+      --primary-color: #9d7fe8;
+      --secondary-color: #5d9cff;
+      --success-color: #20c997;
+      --card-bg: rgba(33, 37, 41, 0.95);
+      --body-bg: #121212;
+      --text-color: #e9ecef;
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">简单转换Github网址</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <label>输入GitHub资源链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="githubRes" aria-describedby="basic-addon1" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh" /> 
-    </div> 
-    <div class="input-group mb-3"> 
-     <button class="btn btn-primary" type="button" onclick="convertRes()" id="cvtBtn">转换资源</button> 
-    </div> 
-    <label>以下为转换后的链接</label> 
-    <div class="input-group mb-3"> 
-     <input type="text" class="form-control" id="resAfterGhproxy" aria-describedby="basic-addon2" onfocus="this.select()" /> 
-     <button class="btn btn-info" type="button" onclick="fetchRes()">获取</button> 
-    </div> 
-   </div> 
-  </div> 
+    body {
+      background: linear-gradient(135deg, var(--body-bg) 0%, #e2e8f0 100%);
+      background-attachment: fixed;
+      color: var(--text-color);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+      transition: var(--transition);
+    }
 
-  <div class="card shadow m-3"> 
-   <h5 class="card-header">其它说明</h5> 
-   <div class="card-body"> 
-    <h5 class="card-title"></h5> 
-    <div class="input-group mb-3"> 
-     <iframe width="560" height="315" src="https://www.youtube.com/embed/F9re4Tuy7BA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe> 
-    </div> 
-    <p>如果我的workers免费额度用完了, 你可以<a href="https://zelikk.blogspot.com/2023/06/gh-proxy-worker.html">自己在worker上搭gh-proxy.</a></p>
-    <p>你也可以<a href="https://zelikk.blogspot.com/2022/05/domain-cloudflare-worker-dev.html">在worker上套自己的域名</a>解决国内访问的问题. </p> 
-    <p>还有一个解决国内访问的方法, 利用Replit域名没有被墙, <a href="https://zelikk.blogspot.com/2023/07/replit-gh-proxy.html">在Replit上跑cloudflare的workers脚本 运行gh-proxy</a></p> 
-    <p>在Replit环境上搭的服务, <a href="https://zelikk.blogspot.com/2023/10/github-proxy-replit-wget-compression-auto.html">wget的用法要加上--compression=auto解决gzip压缩的问题</a></p>
+    .dark-mode body {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+    }
 
-    <label>高级参数 (不懂就不要动)</label> 
-    <div class="input-group mb-3"> 
-     <span class="input-group-text">Github Proxy</span> 
-     <input type="text" class="form-control" id="ghproxy" aria-describedby="basic-addon3" value="https://git.1314k.tk/" /> 
-     <button class="btn btn-info" type="button" onclick="getLocalUrl()" id="localUrlBtn">使用本页</button> 
-    </div> 
-   </div> 
-  </div> 
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-top: 20px;
+    }
+
+    .header h1 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      font-size: 2.5rem;
+    }
+
+    .header p {
+      color: var(--text-color);
+      opacity: 0.8;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: none;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 25px;
+      transition: var(--transition);
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      font-weight: 600;
+      padding: 15px 20px;
+      border-bottom: none;
+      position: relative;
+    }
+
+    .card-header::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, var(--success-color), rgba(255, 255, 255, 0.3));
+    }
+
+    .card-body {
+      padding: 25px;
+    }
+
+    .example-box {
+      background: rgba(111, 66, 193, 0.05);
+      border-left: 4px solid var(--primary-color);
+      padding: 15px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 15px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    .dark-mode .example-box {
+      background: rgba(111, 66, 193, 0.15);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border: none;
+      padding: 10px 20px;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, #5a32a3, #0a58ca);
+      transform: translateY(-2px);
+    }
+
+    .btn-info {
+      background: var(--secondary-color);
+      border: none;
+      transition: var(--transition);
+    }
+
+    .btn-info:hover {
+      background: #0a58ca;
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: var(--success-color);
+      border: none;
+      transition: var(--transition);
+    }
+
+    .btn-success:hover {
+      background: #157347;
+      transform: translateY(-2px);
+    }
+
+    .input-group-text {
+      background: rgba(111, 66, 193, 0.1);
+      border: none;
+      color: var(--primary-color);
+    }
+
+    .form-control {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 12px;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+    }
+
+    .dark-mode .form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: var(--text-color);
+    }
+
+    .dark-mode .form-control:focus {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-color);
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .theme-switch {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      z-index: 100;
+      transition: var(--transition);
+    }
+
+    .theme-switch:hover {
+      transform: scale(1.1);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--success-color);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .card-body {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1><i class="fas fa-code-branch me-2"></i>GitHub脚本代理转换器</h1>
+    <p>解决纯IPv6的VPS运行GitHub脚本时访问GitHub不通的问题</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> 
-  <script src="./main.js"></script>  
- </body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-info-circle me-2"></i>使用说明
+          </div>
+          <div class="card-body">
+            <p>本工具可将GitHub脚本命令转换为使用代理的命令，解决在纯IPv6 VPS上无法访问GitHub的问题。</p>
+            
+            <p class="fw-bold mt-4">支持的命令格式:</p>
+            <div class="example-box">
+              bash &lt;(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4
+            </div>
+            <div class="example-box">
+              bash &lt;(wget -qO- -o- https://git.io/v2ray.sh)
+            </div>
+            <div class="example-box">
+              wget -O tcpx.sh "https://git.io/JYxKU" && chmod +x tcpx.sh && ./tcpx.sh
+            </div>
+            <div class="example-box">
+              wget -N --no-check-certificate https://raw.githubusercontent.com/Misaka-blog/hysteria-install/main/hy2/hysteria.sh && bash hysteria.sh
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <a href="https://github.com/crazypeace/gh-proxy/" class="btn btn-sm btn-outline-primary">
+                <i class="fab fa-github me-1"></i> Fork me on GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-exchange-alt me-2"></i>简单转换GitHub网址
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">输入GitHub资源链接</label>
+              <input type="text" class="form-control" id="githubRes" placeholder="例如 https://github.com/crazypeace/warp.sh/raw/main/warp.sh">
+            </div>
+            
+            <button class="btn btn-primary w-100 mb-4" onclick="convertRes()">
+              <i class="fas fa-sync-alt me-2"></i>转换资源
+            </button>
+            
+            <label class="form-label">转换后的链接</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="resAfterGhproxy" readonly>
+              <button class="btn btn-success" type="button" onclick="fetchRes()">
+                <i class="fas fa-external-link-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-terminal me-2"></i>转换GitHub一键脚本命令
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label class="form-label">输入GitHub脚本命令</label>
+              <input type="text" class="form-control" id="githubScript" placeholder="例如 bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4">
+            </div>
+            
+            <button class="btn btn-primary w-100 mb-4" onclick="convertScript()">
+              <i class="fas fa-magic me-2"></i>转换脚本
+            </button>
+            
+            <div class="mb-4">
+              <label class="form-label">转换结果（单层代理）</label>
+              <p class="small text-muted">仅处理脚本中的第一层GitHub资源</p>
+              <div class="input-group">
+                <input type="text" class="form-control" id="result2" readonly>
+                <button class="btn btn-success" type="button" onclick="copyResult('result2', '单层代理命令已复制')">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div>
+              <label class="form-label">转换结果（多层代理）</label>
+              <p class="small text-muted">处理脚本中嵌套调用的其它GitHub脚本</p>
+              <div class="input-group">
+                <input type="text" class="form-control" id="result1" readonly>
+                <button class="btn btn-success" type="button" onclick="copyResult('result1', '多层代理命令已复制')">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="card-header">
+            <i class="fas fa-cog me-2"></i>高级设置
+          </div>
+          <div class="card-body">
+            <p class="text-muted small mb-3">仅当您了解这些参数的作用时才进行修改</p>
+            
+            <div class="mb-3">
+              <label class="form-label">GitHub代理地址</label>
+              <div class="input-group">
+                <span class="input-group-text"><i class="fas fa-link"></i></span>
+                <input type="text" class="form-control" id="ghproxy" value="https://git.1314k.tk">
+                <button class="btn btn-info" type="button" onclick="getLocalUrl()">
+                  <i class="fas fa-sync me-1"></i>使用本页
+                </button>
+              </div>
+            </div>
+            
+            <div class="alert alert-info">
+              <i class="fas fa-lightbulb me-2"></i> 提示：默认代理已足够处理大多数情况，无需修改
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer">
+    <p>© 2023 GitHub脚本代理转换器 | 帮助解决纯IPv6 VPS访问GitHub的问题</p>
+  </div>
+  
+  <div class="theme-switch" id="themeSwitch">
+    <i class="fas fa-moon"></i>
+  </div>
+  
+  <div class="toast" id="copyToast">复制成功!</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // 主题切换功能
+    document.getElementById('themeSwitch').addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      
+      const icon = this.querySelector('i');
+      if (document.body.classList.contains('dark-mode')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    });
+
+    // 显示提示信息
+    function showToast(message) {
+      const toast = document.getElementById('copyToast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2000);
+    }
+
+    // 复制功能
+    function copyResult(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.select();
+      document.execCommand('copy');
+      showToast(message);
+    }
+
+    // 转换脚本
+    function convertScript() {
+      let inputStr = document.getElementById("githubScript").value;
+      if (!inputStr) {
+        showToast("请输入脚本命令");
+        return;
+      }
+
+      const ghproxy = document.getElementById("ghproxy").value;
+      const perlcmdbegin = ' | perl -pe "$(curl -L ';
+      const perlcmdend = ')"';
+      const perlrule = ghproxy + 'perl-pe-para';
+
+      // 给裸的git类链接前面加上 https://
+      inputStr = inputStr.replace(/ git/g, ' https://git');
+
+      // 处理 bash <( curl xxx.sh) 或 bash <( wget -O- xxx.sh)
+      const regex1 = /(bash.*?)(https?:\/\/.*?)(\).*)/s;
+      
+      // 多层代理（处理嵌套脚本）
+      const replacement1 = '$1' + ghproxy + '$2' + perlcmdbegin + perlrule + perlcmdend + '$3';
+      const resultStr1 = inputStr.replace(regex1, replacement1);
+      if (resultStr1 !== inputStr) {
+        document.getElementById("result1").value = resultStr1;
+      }
+
+      // 单层代理
+      const replacement2 = '$1' + ghproxy + '$2' + ' | perl -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g"' + '$3';
+      let resultStr2 = inputStr.replace(regex1, replacement2);
+      if (resultStr2 !== inputStr) {
+        document.getElementById("result2").value = resultStr2;
+      }
+
+      // 处理 wget xxx.sh && bash xxx.sh 或 wget xxx.sh && chmod +x xxx.sh && ./xxx.sh
+      const regex2 = /(wget.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
+      const replacement3 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
+      resultStr2 = inputStr.replace(regex2, replacement3);
+      if (resultStr2 !== inputStr) {
+        document.getElementById("result2").value = resultStr2;
+      }
+
+      // 处理 curl -sS -O xxx.sh && bash xxx.sh
+      const regex3 = /^(curl.*?)(https?:\/\/.*)(&&[^&]*[ /])(.*?sh)/s;
+      const replacement4 = '$1' + ghproxy + '$2' + '&& perl -i -pe "s#(http.*?git[^/]*?/)#' + ghproxy + '\\1#g" ' + '$4 $3$4';
+      resultStr2 = inputStr.replace(regex3, replacement4);
+      if (resultStr2 !== inputStr) {
+        document.getElementById("result2").value = resultStr2;
+      }
+
+      // 如果没有转换结果，显示提示
+      if (resultStr1 === inputStr && resultStr2 === inputStr) {
+        showToast("未识别到GitHub脚本命令");
+      } else {
+        showToast("转换成功!");
+      }
+    }
+
+    // 使用当前页面作为代理
+    function getLocalUrl() {
+      document.getElementById("ghproxy").value = window.location.origin + window.location.pathname;
+      showToast("已设置为当前页面地址");
+    }
+
+    // 转换资源URL
+    function convertRes() {
+      let inputStr = document.getElementById("githubRes").value;
+      if (!inputStr) {
+        showToast("请输入资源链接");
+        return;
+      }
+
+      const ghproxy = document.getElementById("ghproxy").value;
+      
+      // 给裸的git类链接前面加上 https://
+      inputStr = inputStr.replace(/ git/g, ' https://git');
+      
+      const resultStr = ghproxy + inputStr;
+      document.getElementById("resAfterGhproxy").value = resultStr;
+      showToast("资源链接已转换");
+    }
+
+    // 打开转换后的资源链接
+    function fetchRes() {
+      const url = document.getElementById("resAfterGhproxy").value;
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        showToast("请先转换资源链接");
+      }
+    }
+
+    // 初始化页面
+    document.addEventListener('DOMContentLoaded', function() {
+      getLocalUrl();
+      
+      // 设置示例命令
+      document.getElementById("githubScript").value = "bash <(curl -L https://github.com/coco-coc/warp.sh/raw/main/warp.sh) 4";
+      document.getElementById("githubRes").value = "https://github.com/crazypeace/warp.sh/raw/main/warp.sh";
+    });
+  </script>
+</body>
 </html>
