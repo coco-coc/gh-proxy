@@ -7,6 +7,7 @@
   --body-bg: #f8f9fa;
   --text-color: #212529;
   --text-secondary: #6c757d;
+  --card-text: #212529; /* 新增卡片文本颜色变量 */
   --border-radius: 12px;
   --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   --transition: all 0.3s ease;
@@ -18,24 +19,32 @@
   --success-color: #20c997;
   --card-bg: rgba(33, 37, 41, 0.95);
   --body-bg: #121212;
-  --text-color: #f8f9fa; /* 更亮的文本颜色 */
-  --text-secondary: #adb5bd; /* 更亮的次要文本颜色 */
+  --text-color: #f8f9fa;
+  --text-secondary: #adb5bd;
+  --card-text: #f8f9fa; /* 暗夜模式下的卡片文本颜色 */
   --shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* 确保所有文本元素都使用正确的颜色 */
 body, .card, .card-body, .example-box, 
 .form-control, .form-label, .input-group-text,
-.alert, .footer, .btn {
+.alert, .footer, .btn, .text-muted {
   color: var(--text-color);
   transition: var(--transition);
+}
+
+/* 卡片内文本使用特定颜色 */
+.card-body, .card-header, .card-body p, 
+.card-body label, .card-body .form-label,
+.card-body .small, .card-body .text-muted {
+  color: var(--card-text);
 }
 
 /* 暗夜模式下的输入框优化 */
 .dark-mode .form-control {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.15);
-  color: var(--text-color);
+  color: var(--card-text);
 }
 
 .dark-mode .form-control:focus {
@@ -52,6 +61,7 @@ body, .card, .card-body, .example-box,
 /* 暗夜模式下的按钮优化 */
 .dark-mode .btn-primary {
   background: linear-gradient(to right, #7d5cd1, #4a7eff);
+  color: white;
 }
 
 .dark-mode .btn-primary:hover {
@@ -62,6 +72,7 @@ body, .card, .card-body, .example-box,
 .dark-mode .example-box {
   background: rgba(111, 66, 193, 0.2);
   border-left: 4px solid var(--primary-color);
+  color: var(--card-text);
 }
 
 /* 暗夜模式下的次要文本 */
@@ -73,7 +84,7 @@ body, .card, .card-body, .example-box,
 .dark-mode .alert-info {
   background-color: rgba(13, 202, 240, 0.15);
   border-color: rgba(13, 202, 240, 0.3);
-  color: var(--text-color);
+  color: var(--card-text);
 }
 
 /* 暗夜模式下的输入组文本 */
